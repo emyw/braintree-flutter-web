@@ -37,12 +37,16 @@ abstract class BraintreePluginPlatform extends PlatformInterface {
     Map<String, String>? focusedErrorFieldContainerStyles,
     Map<String, String>? labelStyles,
     Map<String, String>? braintreeInputIframeStyles,
+    Function? onMount,
   }) {
     throw UnimplementedError(
         'createCreditCardForm() has not been implemented.');
   }
 
-  Future<Widget?> createPaypalButtonContainer(int contextId) {
+  Future<Widget?> createPaypalButtonContainer({
+    required int contextId,
+    Function? onMount,
+  }) {
     throw UnimplementedError(
         'createPaypalButtonContainer() has not been implemented.');
   }

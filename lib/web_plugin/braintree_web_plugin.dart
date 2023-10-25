@@ -74,6 +74,7 @@ class BraintreePlugin extends BraintreePluginPlatform {
     Map<String, String>? focusedErrorFieldContainerStyles,
     Map<String, String>? labelStyles,
     Map<String, String>? braintreeInputIframeStyles,
+    Function? onMount,
   }) async {
     final instanceState = _state[contextId];
     if (instanceState == null) {
@@ -181,7 +182,7 @@ class BraintreePlugin extends BraintreePluginPlatform {
       braintreeInputIframeStylesProp: braintreeInputIframeStyles,
     );
 
-    return instanceState.ccForm!;
+    return WidgetWrapper(onMount: onMount, child: instanceState.ccForm!);
   }
 
   /// Create a style element for styling the credit card form, and inject it into the document head
@@ -359,7 +360,10 @@ class BraintreePlugin extends BraintreePluginPlatform {
 
   /// Create and register an html div for the paypal button to be placed inside, and create and return an HtmlElementView for it
   @override
-  Future<Widget> createPaypalButtonContainer(int contextId) async {
+  Future<Widget> createPaypalButtonContainer({
+    required int contextId,
+    Function? onMount,
+  }) async {
     final instanceState = _state[contextId];
     if (instanceState == null) {
       throw Exception('Invalid contextId');
@@ -376,7 +380,8 @@ class BraintreePlugin extends BraintreePluginPlatform {
     ui.platformViewRegistry.registerViewFactory(
         buttonContainerId, (int viewId) => buttonContainer);
 
-    return instanceState.ppButtonContainer!;
+    return WidgetWrapper(
+        onMount: onMount, child: instanceState.ppButtonContainer!);
   }
 
   /// Initialize the braintree client
@@ -672,6 +677,28 @@ class BraintreePlugin extends BraintreePluginPlatform {
     for (var container in instanceState.inputContainers) {
       container.elementRef.classes.remove('braintree-hosted-fields-error');
     }
+  }
+}
+
+/// Wrap credit card form and paypal button container in widget that calls onMount when mounted
+class WidgetWrapper extends StatelessWidget {
+  const WidgetWrapper({
+    super.key,
+    required this.child,
+    this.onMount,
+  });
+
+  final Widget child;
+  final Function? onMount;
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (onMount != null) onMount!();
+    });
+    return SizedBox(
+      child: child,
+    );
   }
 }
 

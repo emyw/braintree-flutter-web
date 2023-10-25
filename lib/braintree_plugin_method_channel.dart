@@ -27,6 +27,7 @@ class MethodChannelBraintreePlugin extends BraintreePluginPlatform {
     Map<String, String>? focusedErrorFieldContainerStyles,
     Map<String, String>? labelStyles,
     Map<String, String>? braintreeInputIframeStyles,
+    Function? onMount,
   }) async {
     final view = await methodChannel
         .invokeMethod<Widget>('createCreditCardForm', <String, dynamic>{
@@ -38,15 +39,20 @@ class MethodChannelBraintreePlugin extends BraintreePluginPlatform {
       'focusedErrorFieldContainerStyles': focusedErrorFieldContainerStyles,
       'labelStyles': labelStyles,
       'braintreeInputIframeStyles': braintreeInputIframeStyles,
+      'onMount': onMount,
     });
     return view;
   }
 
   @override
-  Future<Widget?> createPaypalButtonContainer(int contextId) async {
+  Future<Widget?> createPaypalButtonContainer({
+    required int contextId,
+    Function? onMount,
+  }) async {
     final view = await methodChannel
         .invokeMethod<Widget>('createPaypalButtonContainer', <String, dynamic>{
       'contextId': contextId,
+      'onMount': onMount,
     });
     return view;
   }

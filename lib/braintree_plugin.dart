@@ -42,6 +42,7 @@ class BraintreePlugin {
     Map<String, String>? focusedErrorFieldContainerStyles,
     Map<String, String>? labelStyles,
     Map<String, String>? braintreeInputIframeStyles,
+    Function? onMount,
   }) async {
     await _awaitInit();
     return _braintreePluginPlatform.createCreditCardForm(
@@ -53,12 +54,18 @@ class BraintreePlugin {
       focusedErrorFieldContainerStyles: focusedErrorFieldContainerStyles,
       labelStyles: labelStyles,
       braintreeInputIframeStyles: braintreeInputIframeStyles,
+      onMount: onMount,
     );
   }
 
-  Future<Widget?> createPaypalButtonContainer() async {
+  Future<Widget?> createPaypalButtonContainer({
+    Function? onMount,
+  }) async {
     await _awaitInit();
-    return _braintreePluginPlatform.createPaypalButtonContainer(_contextId!);
+    return _braintreePluginPlatform.createPaypalButtonContainer(
+      contextId: _contextId!,
+      onMount: onMount,
+    );
   }
 
   Future<void> initializeHostedFields({

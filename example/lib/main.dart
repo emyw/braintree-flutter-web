@@ -105,6 +105,21 @@ class _MyHomePageState extends State<MyHomePage> {
       'font-size': '12px',
       'color': 'rgba(0, 0, 0, 0.5)',
     };
+    // final Map<String, String> inputStyles = {
+    //   'font-size': '18px',
+    //   'color': 'rgba(0, 0, 0, 0.85)',
+    // };
+    // final Map<String, String> errorInputStyles = {
+    //   'color': 'rgba(255, 93, 93, 1)',
+    // };
+
+    final inputStyles = {
+      'input': {'font-size': '18px', 'color': 'rgba(0, 0, 0, 0.85)'},
+      'input.invalid': {'color': 'rgba(255, 93, 93, 1)'},
+    };
+    void onInitError(dynamic err) {
+      debugPrint('Error initializing credit card fields: ${err.message}');
+    }
 
     ccForm = await braintreePlugin!.createCreditCardForm(
       postalCode: true,
@@ -113,26 +128,15 @@ class _MyHomePageState extends State<MyHomePage> {
       errorFieldContainerStyles: errorFieldContainerStyles,
       focusedErrorFieldContainerStyles: focusedErrorFieldContainerStyles,
       labelStyles: labelStyles,
-    );
-
-    const textColor = 'rgba(0, 0, 0, 0.85)';
-    const errorColor = 'rgba(255, 93, 93, 1)';
-    final inputStyles = {
-      'input': {'font-size': '18px', 'color': textColor},
-      'input.invalid': {'color': errorColor},
-    };
-    void onInitError(dynamic err) {
-      debugPrint('Error initializing credit card fields: ${err.message}');
-    }
-
-    braintreePlugin!.initializeHostedFields(
-        authorization: _btAuthorization!,
-        inputStyles: inputStyles,
-        onInitError: onInitError);
+        onMount: () {
+          braintreePlugin!.initializeHostedFields(
+              authorization: _btAuthorization!,
+              inputStyles: inputStyles,
+              onInitError: onInitError);
+        });
   }
 
   Future<void> initializePaypal() async {
-    ppButtonContainer = await braintreePlugin!.createPaypalButtonContainer();
     final Map<String, dynamic> paypalSdkOptions = {'vault': true};
     final Map<String, dynamic> paymentOptions = {
       'flow': 'vault', // Required
@@ -179,14 +183,17 @@ class _MyHomePageState extends State<MyHomePage> {
       debugPrint('Error initializing paypal: ${err.message}');
     }
 
-    braintreePlugin!.initializePaypal(
-      authorization: _btAuthorization!,
-      paypalSdkOptions: paypalSdkOptions,
-      paymentOptions: paymentOptions,
-      buttonStyle: buttonStyle,
-      onPaymentRequest: onPaymentRequest,
-      onInitError: onInitError,
-    );
+    ppButtonContainer =
+        await braintreePlugin!.createPaypalButtonContainer(onMount: () {
+      braintreePlugin!.initializePaypal(
+        authorization: _btAuthorization!,
+        paypalSdkOptions: paypalSdkOptions,
+        paymentOptions: paymentOptions,
+        buttonStyle: buttonStyle,
+        onPaymentRequest: onPaymentRequest,
+        onInitError: onInitError,
+      );
+    });
   }
 
   @override
@@ -266,7 +273,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
