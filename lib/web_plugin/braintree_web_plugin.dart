@@ -3,7 +3,7 @@ import 'dart:html' as html;
 import 'dart:js';
 import 'dart:js_util';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:braintree_flutter_web/braintree_plugin_platform_interface.dart';
+import 'package:braintree_web/braintree_plugin_platform_interface.dart';
 import 'package:flutter/material.dart';
 
 import './shims/dart_ui.dart' as ui;
@@ -23,6 +23,8 @@ class FieldRef {
 
 class _BraintreeState {
   _BraintreeState();
+
+  dynamic clientInstance;
 
   bool hostedFieldsInitialized = false;
   bool paypalInitialized = false;
@@ -383,6 +385,7 @@ class BraintreePlugin extends BraintreePluginPlatform {
     required String authorization,
     braintree.ClientCallback? callback,
   }) {
+    final instanceState = _state[contextId]!;
     if (html.document.head!
             .querySelector('script#braintree-script-$contextId') ==
         null) {
@@ -393,6 +396,10 @@ class BraintreePlugin extends BraintreePluginPlatform {
       html.document.head!.append(scriptElement);
     }
 
+    if (instanceState.clientInstance != null) {
+      if (callback != null) callback(null, instanceState.clientInstance);
+      return;
+    }
     final clientOptions = jsify({'authorization': authorization});
     braintree.client.create(
         clientOptions, callbackWrapper(callback ?? (err, [instance]) => null));

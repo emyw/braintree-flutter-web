@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:braintree_flutter_web/braintree_plugin_platform_interface.dart';
-import 'package:braintree_flutter_web/braintree_plugin_method_channel.dart';
+import 'package:braintree_web/braintree_plugin_platform_interface.dart';
+import 'package:braintree_web/braintree_plugin_method_channel.dart';
 
 void main() {
   final BraintreePluginPlatform initialPlatform =

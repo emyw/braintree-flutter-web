@@ -26,7 +26,11 @@ class BraintreePlugin {
 
   Future<void> _awaitInit() {
     final completer = Completer<void>();
-    _initListeners.add(completer);
+    if (_contextId != null) {
+      completer.complete();
+    } else {
+      _initListeners.add(completer);
+    }
     return completer.future;
   }
 
@@ -58,7 +62,6 @@ class BraintreePlugin {
   }
 
   Future<void> initializeHostedFields({
-    required int contextId,
     required String authorization,
     Object? inputStyles,
     dynamic Function(dynamic err)? onInitError,

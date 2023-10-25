@@ -1,11 +1,11 @@
 {
-    "name": "braintree_web",
-    "short_name": "braintree_web",
+    "name": "braintree_web_example",
+    "short_name": "braintree_web_example",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "Braintree/Paypal payment integration plugin",
+    "description": "Braintree/Paypal payment integration plugin example",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
