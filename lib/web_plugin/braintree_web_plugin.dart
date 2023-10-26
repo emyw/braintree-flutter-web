@@ -422,10 +422,6 @@ class BraintreePlugin extends BraintreePluginPlatform {
     if (instanceState == null) {
       throw Exception('Invalid contextId');
     }
-
-    if (instanceState.hostedFieldsInitialized) {
-      return;
-    }
     instanceState.hostedFieldsInitialized = true;
 
     final completer = Completer<void>();
@@ -530,10 +526,6 @@ class BraintreePlugin extends BraintreePluginPlatform {
     final instanceState = _state[contextId];
     if (instanceState == null) {
       throw Exception('Invalid contextId');
-    }
-
-    if (instanceState.paypalInitialized) {
-      return;
     }
     instanceState.paypalInitialized = true;
 
