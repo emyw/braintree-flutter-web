@@ -422,6 +422,20 @@ class BraintreePlugin extends BraintreePluginPlatform {
     if (instanceState == null) {
       throw Exception('Invalid contextId');
     }
+    if (instanceState.hostedFieldsInitialized) {
+      // Remove any previous braintree iframes
+      for (var container in instanceState.inputContainers) {
+        final children = container.elementRef.children.toList();
+        bool firstChild = true;
+        for (var child in children) {
+          if (firstChild) {
+            firstChild = false;
+          } else {
+            child.remove();
+          }
+        }
+      }
+    }
     instanceState.hostedFieldsInitialized = true;
 
     final completer = Completer<void>();
