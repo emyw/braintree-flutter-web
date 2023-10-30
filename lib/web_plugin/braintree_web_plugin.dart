@@ -33,6 +33,7 @@ class _BraintreeState {
   final List<FieldRef> inputContainers = [];
   braintree.HostedFields? hostedFieldsInstance;
   bool includeZipInCCForm = false;
+  bool hasFieldError = false;
 
   HtmlElementView? ppButtonContainer;
 }
@@ -423,6 +424,8 @@ class BraintreePlugin extends BraintreePluginPlatform {
       throw Exception('Invalid contextId');
     }
     if (instanceState.hostedFieldsInitialized) {
+      // Remove previous field error states
+      if (instanceState.hasFieldError) _clearFieldErrorStates(instanceState);
       // Remove any previous braintree iframes
       for (var container in instanceState.inputContainers) {
         final children = container.elementRef.children.toList();
@@ -669,6 +672,7 @@ class BraintreePlugin extends BraintreePluginPlatform {
   /// Handle credit card field errors, such as missing or invalid info
   void _applyFieldErrorStates(
       _BraintreeState instanceState, List<Field> fields) {
+    instanceState.hasFieldError = true;
     for (var container in instanceState.inputContainers) {
       if (fields.contains(container.field)) {
         container.elementRef.classes.add('braintree-hosted-fields-error');
@@ -680,6 +684,7 @@ class BraintreePlugin extends BraintreePluginPlatform {
 
   /// Clear credit card field error states
   void _clearFieldErrorStates(_BraintreeState instanceState) {
+    instanceState.hasFieldError = false;
     for (var container in instanceState.inputContainers) {
       container.elementRef.classes.remove('braintree-hosted-fields-error');
     }
